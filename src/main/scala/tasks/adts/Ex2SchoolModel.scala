@@ -27,7 +27,7 @@ object SchoolModel:
       def teacherByName(name: String): Optional[Teacher]
       def courseByName(name: String): Optional[Course]
       def nameOfTeacher(teacher: Teacher): String
-      def nameOfCourse(teacher: Course): String
+      def nameOfCourse(course: Course): String
       def setTeacherToCourse(teacher: Teacher, course: Course): School
       def coursesOfATeacher(teacher: Teacher): Sequence[Course]
 
@@ -55,14 +55,21 @@ object SchoolModel:
           case Course(currentName) => currentName == name
         ) match
           case Cons(Course(name), _) => Optional.Just(Course(name))
-          case _ => Optional.Empty()
-        
+          case _ => Optional.Empty()  
       
       def nameOfTeacher(teacher: Teacher): String = teacher match
         case Teacher(name, _) => name
       
-      def nameOfCourse(teacher: Teacher): String = ???
-      def setTeacherToCourse(teacher: Teacher, course: Course): School = ???
+      def nameOfCourse(course: Course): String = course match
+        case Course(name) => name
+      
+      def setTeacherToCourse(teacher: Teacher, course: Course): School =
+        def mapTeacher(t: Teacher): Teacher = t match
+          case Teacher(name, courses) if t == teacher => Teacher(name, addToSequence(courses, course))
+          case _ => t
+        school match
+          case School(courses, teachers) => School(courses, Sequence.map(teachers)(mapTeacher))
+      
       
       def coursesOfATeacher(teacher: Teacher): Sequence[Course] = teacher match
         case Teacher(_, courses) => courses

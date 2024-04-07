@@ -47,3 +47,17 @@ class SchoolModelTest:
         )
         val updatedSchool: School = school.addTeacher("AA")
         assertEquals(Just(Teacher("AA", Nil())), updatedSchool.teacherByName("AA"))
+
+    @Test def testNameOfCourse(): Unit =
+        val school: School = School(Nil(), Nil())
+        val c = Course("PPS")
+        assertEquals("PPS", school.nameOfCourse(c))
+
+    @Test def testAddTeacherToCourse(): Unit =
+        val course: Course = Course("PPS")
+        val teacher: Teacher = Teacher("MV", Nil())
+        val school: School = School(Cons(course, Nil()), Cons(teacher, Nil()))
+        val newSchool: School = school.setTeacherToCourse(teacher, course)
+        assertEquals(Cons(course, Nil()), newSchool.coursesOfATeacher(newSchool.teacherByName("MV") match
+            case Just(teacher) => teacher
+        ))
